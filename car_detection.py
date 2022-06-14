@@ -1,18 +1,10 @@
 import argparse
 import os
-import imageio
-import matplotlib.pyplot as plt
-from matplotlib.pyplot import imshow
-import scipy.io
-import scipy.misc
 import numpy as np
-import pandas as pd
-import PIL
 #import tensorflow as tf
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 from keras import backend as K
-from keras.layers import Input, Lambda, Conv2D
 from keras.models import load_model, Model
 from yolo_utils import read_classes, read_anchors, generate_colors, preprocess_image, draw_boxes, scale_boxes
 from yad2k.models.keras_yolo import yolo_head, yolo_boxes_to_corners, preprocess_true_boxes, yolo_loss, yolo_body
@@ -197,7 +189,12 @@ def predict(sess, image_file):
     
     return out_scores, out_boxes, out_classes
 
+def init_model():
+    pass
 
+
+def image_to_box(image_string):
+    pass
 sess = K.get_session()
 class_names = read_classes("model_data/coco_classes.txt")
 anchors = read_anchors("model_data/yolo_anchors.txt")
