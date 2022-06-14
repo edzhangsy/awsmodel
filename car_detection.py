@@ -1,4 +1,6 @@
-import argparse
+from io import BytesIO
+from PIL import Image
+import base64
 import os
 import numpy as np
 #import tensorflow as tf
@@ -189,12 +191,12 @@ def predict(sess, image_file):
     
     return out_scores, out_boxes, out_classes
 
-def init_model():
-    pass
+def image_str2file(image_str):
+    im_bytes = base64.b64decode(image_str)
+    im_file = BytesIO(im_bytes)
+    return im_file
 
 
-def image_to_box(image_string):
-    pass
 sess = K.get_session()
 class_names = read_classes("model_data/coco_classes.txt")
 anchors = read_anchors("model_data/yolo_anchors.txt")
@@ -203,16 +205,23 @@ yolo_model = load_model("model_data/yolo.h5")
 yolo_outputs = yolo_head(yolo_model.output, anchors, len(class_names))
 scores, boxes, classes = yolo_eval(yolo_outputs, image_shape)
 
-print(sys.argv)
-if (len(sys.argv) != 2):
-    print("usage: python car_detection.py <picture>")
-    exit(1)
-file_name = str(sys.argv[1])
+def image_to_box(image_str):
+    im_file = image_str2file(image_str)
+    out_scores, out_boxes, out_classes = predict(sess, im_file)
+    return json.dumps(out_boxes, cls=NumpyEncoder)
 
-out_scores, out_boxes, out_classes = predict(sess, file_name)
+    # json_name = file_name.split(".")[0] + ".json"
 
-json_name = file_name.split(".")[0] + ".json"
+    # with open(json_name, 'w') as file_obj:
+    #   json.dump(out_boxes, file_obj, cls=NumpyEncoder)
+    # print(out_boxes)
 
-with open(json_name, 'w') as file_obj:
-  json.dump(out_boxes, file_obj, cls=NumpyEncoder)
-print(out_boxes)
+def main():
+    with open("./pictures/1.jpg", "rb") as imagestring:
+        convert_string = base64.b64encode(imagestring.read())
+    jsonstr = image_to_box(convert_string)
+    print(jsonstr)
+
+if __name__ == '__main__':
+    main()
+    
