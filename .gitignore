@@ -1,2 +1,5 @@
 __pycache__
 *.pyc
+yolo.h5
+pictures/*.json
+.vscode

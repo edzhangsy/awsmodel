@@ -160,7 +160,7 @@ def yolo_eval(yolo_outputs, image_shape = (1080., 1920.), max_boxes=20, score_th
     return scores, boxes, classes
 
 
-def predict(sess, file_path, image_file):
+def predict(sess, image_file):
     """
     Runs the graph stored in "sess" to predict boxes for "image_file". Prints and plots the preditions.
     
@@ -177,7 +177,7 @@ def predict(sess, file_path, image_file):
     """
 
     # Preprocess your image
-    image, image_data = preprocess_image(file_path + "/" + image_file, model_image_size = (608, 608))
+    image, image_data = preprocess_image(image_file, model_image_size = (608, 608))
 
     # Run the session with the correct tensors and choose the correct placeholders in the feed_dict.
     # You'll need to use feed_dict={yolo_model.input: ... , K.learning_phase(): 0})
@@ -206,12 +206,13 @@ yolo_model = load_model("model_data/yolo.h5")
 yolo_outputs = yolo_head(yolo_model.output, anchors, len(class_names))
 scores, boxes, classes = yolo_eval(yolo_outputs, image_shape)
 
-if sys.argv[1]:
-    file_path = str(sys.argv[1])
-if sys.argv[2]:
-    file_name = str(sys.argv[2])
+print(sys.argv)
+if (len(sys.argv) != 2):
+    print("usage: python car_detection.py <picture>")
+    exit(1)
+file_name = str(sys.argv[1])
 
-out_scores, out_boxes, out_classes = predict(sess, file_path, file_name)
+out_scores, out_boxes, out_classes = predict(sess, file_name)
 
 json_name = file_name.split(".")[0] + ".json"
 
