@@ -3,3 +3,5 @@ __pycache__
 yolo.h5
 pictures/*.json
 .vscode
+*.txt
+builddocker.sh
