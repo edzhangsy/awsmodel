@@ -4,4 +4,5 @@ yolo.h5
 pictures/*.json
 .vscode
 *.txt
-builddocker.sh
+*.sh
+*.json
