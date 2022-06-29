@@ -1,5 +1,6 @@
 __pycache__
 *.pyc
+*.pt
 yolo.h5
 pictures/*.json
 .vscode
