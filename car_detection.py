@@ -208,7 +208,20 @@ scores, boxes, classes = yolo_eval(yolo_outputs, image_shape)
 def image_to_box(image_str):
     im_file = image_str2file(image_str)
     out_scores, out_boxes, out_classes = predict(sess, im_file)
-    return json.dumps(out_boxes, cls=NumpyEncoder)
+    assert len(out_scores) == len(out_boxes) == len(out_classes)
+    def add(n):
+        return n + 1
+    out_classes = list(map(add, out_classes))
+    # change coco classes starting from index 0 to index 1
+    # for example, coco car class: 2 -> 3
+    result = {
+        "scores": out_scores,
+        "boxes": out_boxes,
+        "classes": out_classes,
+        "len": len(out_boxes)
+    }
+    result = json.dumps(result, cls=NumpyEncoder)
+    return result
 
     # json_name = file_name.split(".")[0] + ".json"
 
