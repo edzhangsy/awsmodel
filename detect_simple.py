@@ -37,7 +37,7 @@ from utils.augmentations import letterbox
 
 def predict(im):
     weights = 'weights/yolov5n.pt'
-    device = ''# device: cuda device, i.e. 0 or 0,1,2,3 or cpu
+    device = 'cpu'# device: cuda device, i.e. 0 or 0,1,2,3 or cpu
     imgsz=(640, 640)  # inference size (height, width)
     bs = 1  # batch size
 
@@ -81,8 +81,9 @@ def predict(im):
         det[:, :4] = scale_coords(im.shape[2:], det[:, :4], original_shape).round()
         det[:, :4] = det[:, :4].int()
         det = det.numpy()
+        det[:, [4, 5]] = det[:, [5, 4]]
 
-    return det
+    return det.tolist()
 
 
 def image_str2file(image_str):
@@ -107,7 +108,7 @@ def image_to_box(image_str):
     #     "classes": out_classes,
     #     "len": len(out_boxes)
     # }
-    result = json.dumps(result, cls=NumpyEncoder)
+    # result = json.dumps(result, cls=NumpyEncoder)
     return result
 
 def main():    
