@@ -7,7 +7,6 @@ OutPut: a json which contains classes, bounding boxes and confidence
 import argparse
 import os
 import sys
-from turtle import right
 import numpy as np
 from pathlib import Path
 from io import BytesIO
@@ -36,7 +35,7 @@ from utils.torch_utils import select_device, time_sync
 from utils.augmentations import letterbox
 
 def predict(im):
-    weights = 'weights/yolov5n.pt'
+    weights = 'weights/yolov5x.pt'
     device = 'cpu'# device: cuda device, i.e. 0 or 0,1,2,3 or cpu
     imgsz=(640, 640)  # inference size (height, width)
     bs = 1  # batch size
