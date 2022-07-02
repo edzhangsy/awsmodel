@@ -113,9 +113,9 @@ def image_to_box(image_str):
 def main():    
     with open("data/images/1.jpg", "rb") as imagestring:
         convert_string = base64.b64encode(imagestring.read())
-    jsonstr = image_to_box(convert_string)
-    print(jsonstr)
+    result = image_to_box(convert_string)
+    return result
 
 
 if __name__ == "__main__":
-    main()
+    print(main())
