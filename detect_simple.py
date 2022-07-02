@@ -11,6 +11,7 @@ import numpy as np
 from pathlib import Path
 from io import BytesIO
 import base64
+import re
 import json
 from unittest import result
 from numpyencoder import NumpyEncoder
@@ -34,8 +35,16 @@ from utils.plots import Annotator, colors, save_one_box
 from utils.torch_utils import select_device, time_sync
 from utils.augmentations import letterbox
 
-def predict(im):
-    weights = 'weights/yolov5x.pt'
+weight_path = "weights/yolov5n.pt"
+
+def model_name() -> str:
+    m = re.search("/(.*)\.pt", weight_path)
+    if m:
+        return m.group(1)
+    return ""
+
+def predict(im, weight_path: str) -> list:
+    weights = weight_path
     device = 'cpu'# device: cuda device, i.e. 0 or 0,1,2,3 or cpu
     imgsz=(640, 640)  # inference size (height, width)
     bs = 1  # batch size
@@ -90,10 +99,10 @@ def image_str2file(image_str):
     im_file = BytesIO(im_bytes)
     return im_file
 
-def image_to_box(image_str):
+def image_to_box(image_str, weight_path: str) -> list:
     im_file = image_str2file(image_str)
     
-    result = predict(im_file)
+    result = predict(im_file, weight_path)
     # out_scores, out_boxes, out_classes = predict(im_file)
     # assert len(out_scores) == len(out_boxes) == len(out_classes)
     # def add(n):
@@ -110,12 +119,13 @@ def image_to_box(image_str):
     # result = json.dumps(result, cls=NumpyEncoder)
     return result
 
-def main():    
+def test():
     with open("data/images/1.jpg", "rb") as imagestring:
         convert_string = base64.b64encode(imagestring.read())
-    result = image_to_box(convert_string)
+    result = image_to_box(convert_string, weight_path)
+    print("model name is " + model_name())
     return result
 
 
 if __name__ == "__main__":
-    print(main())
+    print(test())
