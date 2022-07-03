@@ -6,9 +6,6 @@ def main():
     with open("data/images/1.jpg", "rb") as imagestring:
         image_string = base64.b64encode(imagestring.read())
         mock_data = {
-            "file_hash": "1234",
-            "file_b64": image_string.decode(),
-            "frame_num": 0,
             "request_type": "test"
         }
         event = json.dumps(mock_data)
